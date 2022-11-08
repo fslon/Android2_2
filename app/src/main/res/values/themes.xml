@@ -13,4 +13,15 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="forLabels">
+       <item name="android:textSize">@dimen/city</item>
+    </style>
+
+    <style name="forResults">
+        <item name="android:textSize">@dimen/city_result</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">@dimen/margin_results</item>
+    </style>
+
 </resources>

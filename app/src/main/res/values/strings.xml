@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Android2_2</string>
+    <string name="city">Город </string>
+    <string name="update_data">Обновить данные</string>
+    <string name="string_null">-</string>
+    <string name="temperature">Температура</string>
+    <string name="wind">Ветер</string>
+    <string name="wetness">Влажность</string>
 </resources>

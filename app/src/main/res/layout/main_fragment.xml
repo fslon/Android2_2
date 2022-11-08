@@ -8,24 +8,100 @@
     tools:context=".view.MainFragment">
 
     <TextView
-        android:id="@+id/textview_weather_now"
+        android:id="@+id/textview_city"
+        style="@style/forLabels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Погода: "
-        android:textSize="30sp"
+        android:text="@string/city"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textview_city_result"
+        style="@style/forResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_city"
 
         />
+
+    <TextView
+        android:id="@+id/textview_temperature"
+        style="@style/forLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_city_result" />
+
+    <TextView
+        android:id="@+id/textview_temperature_result"
+        style="@style/forResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_temperature" />
+
+    <TextView
+        android:id="@+id/textview_wind"
+        style="@style/forLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_temperature_result" />
+
+    <TextView
+        android:id="@+id/textview_wind_result"
+        style="@style/forResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_wind" />
+
+    <TextView
+        android:id="@+id/textview_wetness"
+        style="@style/forLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wetness"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_wind_result" />
+
+    <TextView
+        android:id="@+id/textview_wetness_result"
+        style="@style/forResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_wetness" />
+
+
+
+
 
     <Button
         android:id="@+id/button_reload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Обновить данные"
+        android:layout_marginTop="@dimen/margin_top_update_button"
+        android:text="@string/update_data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_weather_now"
 
         />
 
@@ -45,8 +121,8 @@
         >
 
         <ProgressBar
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
