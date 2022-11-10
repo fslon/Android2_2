@@ -3,18 +3,19 @@ package ru.geekbrains.android2_2.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geekbrains.android2_2.view.AppState
-import java.lang.Exception
+import ru.geekbrains.android2_2.model.Repository
+import ru.geekbrains.android2_2.model.RepositoryImpl
 import java.lang.NullPointerException
 import java.lang.Thread.sleep
-import kotlin.random.Random
 
-class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = MutableLiveData()) :
+class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = MutableLiveData(),
+private val repositoryImpl: Repository = RepositoryImpl()) :
     ViewModel() {
 
     fun getLiveData() = liveDataToObserve
 
-    fun getWeather() = getDataFromLocalSource()
+    fun getWeatherFromLocalSource() = getDataFromLocalSource()
+    fun getWeatherFromRemoteSource() = getDataFromLocalSource()
 
     fun getData(): LiveData<Any> {
         getDataFromLocalSource()
@@ -22,11 +23,6 @@ class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = Mutabl
     }
 
     private fun getDataFromLocalSource() {
-//        Thread{
-//            for ( i in 1..5){
-//            sleep(4000)
-//            liveDataToObserve.postValue("дропдьлдпрль $i")}
-//        }.start()
 
         liveDataToObserve.value = AppState.Loading
         Thread {
@@ -34,7 +30,7 @@ class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = Mutabl
             sleep(3000)
             when ((1..2).random()){
 
-                 1 -> liveDataToObserve.postValue(AppState.Success(Any()))
+                 1 -> liveDataToObserve.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorage()))
                 2 -> liveDataToObserve.postValue(AppState.Error(NullPointerException()))
 
             }

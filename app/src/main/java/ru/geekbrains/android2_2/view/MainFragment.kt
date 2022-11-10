@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.MainFragmentBinding
+import ru.geekbrains.android2_2.model.Weather
+import ru.geekbrains.android2_2.viewModel.AppState
 import ru.geekbrains.android2_2.viewModel.MainViewModel
 
 class MainFragment : Fragment() {
@@ -45,9 +47,9 @@ class MainFragment : Fragment() {
 //        viewModel.getData().observe(viewLifecycleOwner, observer)
 
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it as AppState) })
-        viewModel.getWeather()
+        viewModel.getWeatherFromLocalSource()
 
-        viewBinding?.buttonReload?.setOnClickListener { viewModel.getWeather() }
+        viewBinding?.buttonReload?.setOnClickListener { viewModel.getWeatherFromLocalSource() }
 
     }
 
@@ -59,7 +61,7 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                 val weatherData = appState.weatherData
                 viewBinding?.downloadingLayout?.visibility = View.GONE
-                Snackbar.make(viewBinding!!.main, "Success", Snackbar.LENGTH_LONG).show()
+                setData(weatherData)
             }
             is AppState.Loading -> {
                 viewBinding?.downloadingLayout?.visibility = View.VISIBLE
@@ -69,7 +71,7 @@ class MainFragment : Fragment() {
                 viewBinding?.downloadingLayout?.visibility = View.GONE
                 Snackbar
                     .make(viewBinding!!.main, "Error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getWeather() }
+                    .setAction("Reload") { viewModel.getWeatherFromLocalSource() }
                     .show()
 
 
@@ -77,6 +79,14 @@ class MainFragment : Fragment() {
 
 
         }
+
+    }
+
+    private fun setData(weatherData: Weather) {
+        viewBinding?.textviewCityResult?.text = weatherData.city.city
+        viewBinding?.textviewTemperatureResult?.text = weatherData.temperature.toString()
+        viewBinding?.textviewWindResult?.text = weatherData.wind.toString()
+        viewBinding?.textviewWetnessResult?.text = weatherData.wetness.toString()
 
     }
 
