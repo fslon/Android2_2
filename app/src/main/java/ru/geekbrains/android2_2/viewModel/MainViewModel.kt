@@ -1,40 +1,41 @@
 package ru.geekbrains.android2_2.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.geekbrains.android2_2.model.Repository
 import ru.geekbrains.android2_2.model.RepositoryImpl
-import java.lang.NullPointerException
 import java.lang.Thread.sleep
 
-class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = MutableLiveData(),
-private val repositoryImpl: Repository = RepositoryImpl()) :
+class MainViewModel(
+    private val liveDataToObserve: MutableLiveData<Any> = MutableLiveData(),
+    private val repositoryImpl: Repository = RepositoryImpl(),
+
+    ) :
     ViewModel() {
 
     fun getLiveData() = liveDataToObserve
 
-    fun getWeatherFromLocalSource() = getDataFromLocalSource()
-    fun getWeatherFromRemoteSource() = getDataFromLocalSource()
+    fun getWeatherFromLocalSourceRus() = getDataFromLocalSource(isRussian = true)
+    fun getWeatherFromLocalSourceWorld() = getDataFromLocalSource(isRussian = false)
+    fun getWeatherFromRemoteSource() = getDataFromLocalSource(isRussian = true)
 
-    fun getData(): LiveData<Any> {
-        getDataFromLocalSource()
-        return liveDataToObserve
-    }
+//    fun getData(): LiveData<Any> {
+//        getDataFromLocalSource()
+//        return liveDataToObserve
+//    }
 
-    private fun getDataFromLocalSource() {
+    private fun getDataFromLocalSource(isRussian: Boolean) {
 
         liveDataToObserve.value = AppState.Loading
         Thread {
 
             sleep(3000)
-            when ((1..2).random()){
+            when ((1..2).random()) {
 
-                 1 -> liveDataToObserve.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorage()))
+                1 -> liveDataToObserve.postValue(AppState.Success(if (isRussian) repositoryImpl.getWeatherFromLocalStorageRus() else repositoryImpl.getWeatherFromLocalStorageWorld()))
                 2 -> liveDataToObserve.postValue(AppState.Error(NullPointerException()))
 
             }
-//            liveDataToObserve.postValue(AppState.Success(Any()))
 
         }.start()
 

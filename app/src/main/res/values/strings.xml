@@ -6,4 +6,7 @@
     <string name="temperature">Температура</string>
     <string name="wind">Ветер</string>
     <string name="wetness">Влажность</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="city_name">City name</string>
 </resources>

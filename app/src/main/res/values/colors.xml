@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey_for_downloading_layout">#737373</color>
+    <color name="loadingBackground">#FFFFFF</color>
 </resources>
