@@ -2,156 +2,43 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainFragment">
+    tools:context=".view.main.MainFragment">
 
-    <TextView
-        android:id="@+id/textview_city"
-        style="@style/forLabels"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainFragmentRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/city"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textview_city_result"
-        style="@style/forResults"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainFragmentFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/string_null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_city"
-
-        />
-
-    <TextView
-        android:id="@+id/textview_temperature"
-        style="@style/forLabels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/temperature"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_city_result" />
-
-    <TextView
-        android:id="@+id/textview_temperature_result"
-        style="@style/forResults"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/string_null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_temperature" />
-
-    <TextView
-        android:id="@+id/textview_wind"
-        style="@style/forLabels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/wind"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_temperature_result" />
-
-    <TextView
-        android:id="@+id/textview_wind_result"
-        style="@style/forResults"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/string_null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_wind" />
-
-    <TextView
-        android:id="@+id/textview_wetness"
-        style="@style/forLabels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/wetness"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_wind_result" />
-
-    <TextView
-        android:id="@+id/textview_wetness_result"
-        style="@style/forResults"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/string_null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_wetness" />
-
-
-
-
-
-    <Button
-        android:id="@+id/button_reload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_top_update_button"
-        android:text="@string/update_data"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/russia"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="@dimen/fab_icon_size" />
 
-        />
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-
-        android:id="@+id/downloading_layout"
+    <FrameLayout
+        android:id="@+id/mainFragmentLoadingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_for_downloading_layout"
+        android:background="@color/loadingBackground"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        >
+        tools:visibility="gone">
 
         <ProgressBar
-            android:layout_width="@dimen/progress_bar_size"
-            android:layout_height="@dimen/progress_bar_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
