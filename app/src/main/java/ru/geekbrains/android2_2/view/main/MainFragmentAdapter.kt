@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.model.Weather
 
-class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
+class MainFragmentAdapter(private var onItemViewClickListener: MainFragment.OnItemViewClickListener?) :
+    RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
     private var weatherData: List<Weather> = listOf()
 
     fun setWeather(data: List<Weather>) {
@@ -38,14 +38,19 @@ class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHol
             itemView.findViewById<TextView>(R.id.mainFragmentRecyclerItemTextView).text =
                 weather.city.city
 
-            itemView.setOnClickListener{
-                Toast.makeText(itemView.context, weather.city.city, Toast.LENGTH_LONG).show()
+            itemView.setOnClickListener {
+                onItemViewClickListener?.onItemViewClick(weather)
             }
-
-
 
 
         }
     }
+
+
+    fun removeListener() {
+        onItemViewClickListener = null
+    }
+
+
 }
 

@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey_for_downloading_layout">#737373</color>
     <color name="loadingBackground">#FFFFFF</color>
+    <color name="fragmentDetailsBackground">#FFFFFF</color>
 </resources>

@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.MainFragmentBinding
+import ru.geekbrains.android2_2.model.Weather
+import ru.geekbrains.android2_2.view.details.DetailsFragment
 import ru.geekbrains.android2_2.viewModel.AppState
 import ru.geekbrains.android2_2.viewModel.MainViewModel
 
@@ -18,7 +20,18 @@ class MainFragment : Fragment() {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: MainViewModel
-    private val adapter = MainFragmentAdapter()
+    private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
+        override fun onItemViewClick(weather: Weather) {
+            val manager = activity?.supportFragmentManager
+            if (manager != null) {
+                val bundle = Bundle()
+                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
+                manager.beginTransaction().add(R.id.container, DetailsFragment.newInstance(bundle))
+                    .addToBackStack("").commitAllowingStateLoss()
+
+            }
+        }
+    })
     private var isDataSetRus: Boolean = true
 
 
@@ -39,7 +52,7 @@ class MainFragment : Fragment() {
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it as AppState) })
         viewModel.getWeatherFromLocalSourceRus()
 
-
+        binding.buttonReload.setOnClickListener { viewModel.getWeatherFromLocalSourceRus() }
     }
 
     private fun renderData(appState: AppState) {
@@ -69,14 +82,23 @@ class MainFragment : Fragment() {
             binding.mainFragmentFAB.setImageResource(R.drawable.world)
         } else {
             viewModel.getWeatherFromLocalSourceRus()
-           binding.mainFragmentFAB.setImageResource(R.drawable.russia)
+            binding.mainFragmentFAB.setImageResource(R.drawable.russia)
         }
         isDataSetRus = !isDataSetRus
 
     }
 
+    override fun onDestroy() {
+        adapter.removeListener()
+        super.onDestroy()
+    }
+
 
     companion object {
         fun newInstance() = MainFragment()
+    }
+
+    interface OnItemViewClickListener {
+        fun onItemViewClick(weather: Weather)
     }
 }

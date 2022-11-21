@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.DetailsFragment">
+    tools:context=".view.details.DetailsFragment"
+    android:background="@color/fragmentDetailsBackground">
 
     <TextView
         android:id="@+id/textview_city"
@@ -90,17 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/textview_wetness" />
 
 
-    <Button
-        android:id="@+id/button_reload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_top_update_button"
-        android:text="@string/update_data"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
 
-        />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

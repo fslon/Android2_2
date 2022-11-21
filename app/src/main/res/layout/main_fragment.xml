@@ -21,9 +21,24 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/russia"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_icon_size" />
+        app:maxImageSize="@dimen/fab_icon_size"
+        app:tint="@null" />
+
+    <Button
+        android:id="@+id/button_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_update_button"
+        android:text="@string/update_data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        />
+
 
     <FrameLayout
         android:id="@+id/mainFragmentLoadingLayout"
