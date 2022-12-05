@@ -13,3 +13,20 @@ fun View.showSnackBar(
     Snackbar.make(this, text, length).setAction(actionText, action).show()
 }
 
+fun View.showSnackBarWithoutAction(
+    text: String,
+    length: Int = Snackbar.LENGTH_LONG
+) {
+    Snackbar.make(this, text, length).show()
+}
+
+fun View.showSnackBarFromResources(
+    resourceId: Int,
+    length: Int = Snackbar.LENGTH_LONG
+
+) {
+    Snackbar.make(this, resourceId, length).show()
+}
+
+
+
