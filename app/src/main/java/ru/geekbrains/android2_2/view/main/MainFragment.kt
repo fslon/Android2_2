@@ -1,6 +1,7 @@
 package ru.geekbrains.android2_2.view.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class MainFragment : Fragment() {
         override fun onItemViewClick(weather: Weather) {
 
             activity?.supportFragmentManager?.apply {
+                Log.e("!!!!", "тариышгиаги")
                 val bundle = Bundle()
                 bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
                 beginTransaction().add(R.id.container, DetailsFragment.newInstance(bundle))

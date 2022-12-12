@@ -10,5 +10,6 @@
     <string name="city_name">City name</string>
     <string name="error">Error</string>
     <string name="reload">Reload</string>
+    <string name="lat_lon">lt/ln: </string>
 
 </resources>
