@@ -1,17 +1,37 @@
 package ru.geekbrains.android2_2.view.details
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.details_fragment.*
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.DetailsFragmentBinding
-import ru.geekbrains.android2_2.model.Weather
-import ru.geekbrains.android2_2.model.WeatherDTO
-import ru.geekbrains.android2_2.model.WeatherLoader
+import ru.geekbrains.android2_2.model.*
+
+const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
+const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
+const val DETAILS_INTENT_EMPTY_EXTRA = "INTENT IS EMPTY"
+const val DETAILS_DATA_EMPTY_EXTRA = "DATA IS EMPTY"
+const val DETAILS_RESPONSE_EMPTY_EXTRA = "RESPONSE IS EMPTY"
+const val DETAILS_REQUEST_ERROR_EXTRA = "REQUEST ERROR"
+const val DETAILS_REQUEST_ERROR_MESSAGE_EXTRA = "REQUEST ERROR MESSAGE"
+const val DETAILS_URL_MALFORMED_EXTRA = "URL MALFORMED"
+const val DETAILS_RESPONSE_SUCCESS_EXTRA = "RESPONSE SUCCESS"
+const val DETAILS_TEMP_EXTRA = "TEMPERATURE"
+const val DETAILS_WIND_EXTRA = "WIND"
+const val DETAILS_HUMIDITY_EXTRA = "HUMIDITY"
+private const val TEMP_INVALID = -100
+private const val WIND_INVALID = -100.0
+private const val HUMIDITY_INVALID = -100
+private const val PROCESS_ERROR = "Обработка ошибки"
+
 
 const val YOUR_API_KEY = "b8071b48-3dde-46cb-a01d-808d4e60bd46"
 
@@ -21,6 +41,51 @@ class DetailsFragment : Fragment() {
     private var _viewBinding: DetailsFragmentBinding? = null
     private val viewBinding get() = _viewBinding!!
     private lateinit var weatherBundle: Weather
+
+
+    private val loadResultsReceiver: BroadcastReceiver = object :
+        BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.getStringExtra(DETAILS_LOAD_RESULT_EXTRA)) {
+                DETAILS_INTENT_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_DATA_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_RESPONSE_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_REQUEST_ERROR_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_REQUEST_ERROR_MESSAGE_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_URL_MALFORMED_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_RESPONSE_SUCCESS_EXTRA -> renderData(
+                    WeatherDTO(
+                        FactDTO(
+                            intent.getIntExtra(
+                                DETAILS_TEMP_EXTRA, TEMP_INVALID
+                            ),
+                            intent.getDoubleExtra(
+                                DETAILS_WIND_EXTRA,
+                                WIND_INVALID
+                            ),
+                            intent.getIntExtra(
+                                DETAILS_HUMIDITY_EXTRA,
+                                HUMIDITY_INVALID
+                            )
+                        )
+                    )
+                )
+                else -> TODO(PROCESS_ERROR)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        context?.let {
+            LocalBroadcastManager.getInstance(it)
+                .registerReceiver(
+                    loadResultsReceiver,
+                    IntentFilter(DETAILS_INTENT_FILTER)
+                )
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,70 +97,65 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
+        getWeather()
+    }
 
-//        arguments?.getParcelable<Weather>(BUNDLE_EXTRA)?.let { setData(it) }
-
-        weatherBundle = arguments?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather()
+    private fun getWeather() {
         viewBinding.main.visibility = View.GONE
         viewBinding.downloadingLayout.visibility = View.VISIBLE
-        val loader = WeatherLoader(
-            onLoadListener, weatherBundle.city.lat,
-            weatherBundle.city.lon
-        )
-        loader.loadWeather()
 
-
+        context?.let {
+            it.startService(Intent(it, LoadWeatherService::class.java).apply {
+                putExtra(
+                    LATITUDE_EXTRA,
+                    weatherBundle.city.lat
+                )
+                putExtra(
+                    LONGITUDE_EXTRA,
+                    weatherBundle.city.lon
+                )
+            })
+        }
     }
 
-    private val onLoadListener: WeatherLoader.WeatherLoaderListener =
-        object : WeatherLoader.WeatherLoaderListener {
-            override fun onLoaded(weatherDTO: WeatherDTO) {
-                displayWeather(weatherDTO)
-            }
-
-            override fun onFailed(throwable: Throwable) {
-                Snackbar.make(viewBinding.root, "Ошибка", Snackbar.LENGTH_LONG).show()
-            }
-        }
-
-
-    private fun displayWeather(weatherDTO: WeatherDTO) {
-
-        with(viewBinding) {
-            main.visibility = View.VISIBLE
-            downloading_layout.visibility = View.GONE
+    private fun renderData(weatherDTO: WeatherDTO) {
+        viewBinding.main.visibility = View.VISIBLE
+        viewBinding.downloadingLayout.visibility = View.GONE
+        val fact = weatherDTO.fact
+        val temp = fact!!.temp
+        val wind = fact.wind_speed
+        val humidity = fact.humidity
+        if (temp == TEMP_INVALID || wind == WIND_INVALID || humidity ==
+            HUMIDITY_INVALID
+        ) {
+            Snackbar.make(
+                viewBinding.root,
+                "TEMP_INVALID, WIND_INVALID, HUMIDITY_INVALID ",
+                Snackbar.LENGTH_LONG
+            ).show()
+        } else {
             val city = weatherBundle.city
-            textviewCityResult.text = city.city
-            textviewTemperatureResult.text = weatherDTO.fact?.temp.toString()
-            textviewWindResult.text = weatherDTO.fact?.wind_speed.toString()
-            textviewWetnessResult.text = "${weatherDTO.fact?.humidity.toString()}%"
-
-            textviewCoordinates.text = "${getString(R.string.lat_lon)} ${city.lat}, ${city.lon}"
-
-
+            viewBinding.textviewCityResult.text = city.city
+            viewBinding.textviewTemperatureResult.text = temp.toString()
+            viewBinding.textviewWindResult.text = wind.toString()
+            viewBinding.textviewWetnessResult.text = "${humidity}%"
+            viewBinding.textviewCoordinates.text =
+                "${getString(R.string.lat_lon)} ${city.lat}, ${city.lon}"
         }
-
-    }
-
-
-    private fun setData(weatherData: Weather) {
-        viewBinding.textviewCityResult.text = weatherData.city.city
-        viewBinding.textviewTemperatureResult.text = weatherData.temperature.toString()
-        viewBinding.textviewWindResult.text = weatherData.wind.toString()
-        viewBinding.textviewWetnessResult.text = weatherData.wetness.toString()
-
     }
 
 
     override fun onDestroy() {
-        super.onDestroy()
         _viewBinding = null
+        context?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(loadResultsReceiver)
+        }
+        super.onDestroy()
     }
 
     companion object {
-
         const val BUNDLE_EXTRA = "weather"
-
         fun newInstance(bundle: Bundle): DetailsFragment {
             val fragment = DetailsFragment()
             fragment.arguments = bundle

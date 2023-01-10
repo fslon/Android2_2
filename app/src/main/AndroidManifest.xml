@@ -21,6 +21,10 @@
             </intent-filter>
         </activity>
 
+
+        <service android:name=".model.LoadWeatherService" />
+
+
         <receiver
             android:name=".model.MainBroadcastReceiver"
             android:exported="false">

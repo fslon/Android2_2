@@ -15,7 +15,7 @@
     </style>
 
     <style name="forLabels">
-       <item name="android:textSize">@dimen/city</item>
+        <item name="android:textSize">@dimen/city</item>
     </style>
 
     <style name="forResults">
