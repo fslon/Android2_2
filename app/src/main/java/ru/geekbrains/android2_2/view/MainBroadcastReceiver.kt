@@ -1,4 +1,4 @@
-package ru.geekbrains.android2_2.model
+package ru.geekbrains.android2_2.view
 
 import android.content.BroadcastReceiver
 import android.content.Context

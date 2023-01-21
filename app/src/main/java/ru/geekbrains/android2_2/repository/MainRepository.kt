@@ -1,6 +1,8 @@
-package ru.geekbrains.android2_2.model
+package ru.geekbrains.android2_2.repository
 
-interface Repository {
+import ru.geekbrains.android2_2.model.Weather
+
+interface MainRepository {
     fun getWeatherFromServer(): Weather
     fun getWeatherFromLocalStorageRus(): List<Weather>
     fun getWeatherFromLocalStorageWorld(): List<Weather>

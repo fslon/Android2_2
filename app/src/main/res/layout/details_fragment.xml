@@ -104,6 +104,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textview_wetness" />
 
+    <TextView
+        android:id="@+id/textview_condition"
+        style="@style/forLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/condition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_wetness_result" />
+
+    <TextView
+        android:id="@+id/textview_condition_result"
+        style="@style/forResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_condition" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
 

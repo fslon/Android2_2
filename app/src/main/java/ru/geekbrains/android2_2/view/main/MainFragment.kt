@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.MainFragmentBinding
 import ru.geekbrains.android2_2.model.Weather
+import ru.geekbrains.android2_2.utils.showSnackBar
 import ru.geekbrains.android2_2.view.details.DetailsFragment
-import ru.geekbrains.android2_2.view.showSnackBar
 import ru.geekbrains.android2_2.viewModel.AppState
 import ru.geekbrains.android2_2.viewModel.MainViewModel
 

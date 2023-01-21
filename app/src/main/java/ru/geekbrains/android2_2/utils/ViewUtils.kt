@@ -1,4 +1,4 @@
-package ru.geekbrains.android2_2.view
+package ru.geekbrains.android2_2.utils
 
 import android.view.View
 import com.google.android.material.snackbar.Snackbar

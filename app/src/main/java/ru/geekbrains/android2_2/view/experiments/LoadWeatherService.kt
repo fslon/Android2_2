@@ -1,4 +1,4 @@
-package ru.geekbrains.android2_2.model
+package ru.geekbrains.android2_2.view.experiments
 
 import android.app.IntentService
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
+import ru.geekbrains.android2_2.model.WeatherDTO
 import ru.geekbrains.android2_2.view.details.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
