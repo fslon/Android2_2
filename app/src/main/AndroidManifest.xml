@@ -22,7 +22,7 @@
         </activity>
 
 
-        <service android:name=".model.LoadWeatherService" />
+<!--        <service android:name=".model.LoadWeatherService" />-->
 
 
         <receiver

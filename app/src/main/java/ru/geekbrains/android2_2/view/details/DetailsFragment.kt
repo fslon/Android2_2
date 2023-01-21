@@ -5,15 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import okhttp3.*
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.DetailsFragmentBinding
-import ru.geekbrains.android2_2.model.*
+import ru.geekbrains.android2_2.model.FactDTO
+import ru.geekbrains.android2_2.model.Weather
+import ru.geekbrains.android2_2.model.WeatherDTO
+import java.io.IOException
 
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
 const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
@@ -31,6 +37,9 @@ private const val TEMP_INVALID = -100
 private const val WIND_INVALID = -100.0
 private const val HUMIDITY_INVALID = -100
 private const val PROCESS_ERROR = "Обработка ошибки"
+
+private const val REQUEST_API_KEY = "X-Yandex-API-Key"
+private const val MAIN_LINK = "https://api.weather.yandex.ru/v2/informers?"
 
 
 const val YOUR_API_KEY = "b8071b48-3dde-46cb-a01d-808d4e60bd46"
@@ -102,47 +111,112 @@ class DetailsFragment : Fragment() {
     }
 
     private fun getWeather() {
+//        viewBinding.main.visibility = View.GONE
+//        viewBinding.downloadingLayout.visibility = View.VISIBLE
+//
+//        context?.let {
+//            it.startService(Intent(it, LoadWeatherService::class.java).apply {
+//                putExtra(
+//                    LATITUDE_EXTRA,
+//                    weatherBundle.city.lat
+//                )
+//                putExtra(
+//                    LONGITUDE_EXTRA,
+//                    weatherBundle.city.lon
+//                )
+//            })
+//        }
+
         viewBinding.main.visibility = View.GONE
         viewBinding.downloadingLayout.visibility = View.VISIBLE
+        val client = OkHttpClient() // Клиент
+        val builder: Request.Builder = Request.Builder() // Создаём строителя запроса
+        builder.header(REQUEST_API_KEY, YOUR_API_KEY) // Создаём заголовок запроса
+        builder.url(
+            MAIN_LINK +
+                    "lat=${weatherBundle.city.lat}&lon=${weatherBundle.city.lon}"
+        ) // Формируем URL
+        val request: Request = builder.build() // Создаём запрос
+        val call: Call = client.newCall(request) // Ставим запрос в очередь и отправляем
+        call.enqueue(object : Callback {
+            val handler: Handler = Handler()
 
-        context?.let {
-            it.startService(Intent(it, LoadWeatherService::class.java).apply {
-                putExtra(
-                    LATITUDE_EXTRA,
-                    weatherBundle.city.lat
-                )
-                putExtra(
-                    LONGITUDE_EXTRA,
-                    weatherBundle.city.lon
-                )
-            })
-        }
+            // Вызывается, если ответ от сервера пришёл
+            @Throws(IOException::class)
+            override fun onResponse(call: Call?, response: Response) {
+                val serverResponse: String? = response.body()?.string()
+// Синхронизируем поток с потоком UI
+                if (response.isSuccessful && serverResponse != null) {
+                    handler.post {
+                        renderData(
+                            Gson().fromJson(
+                                serverResponse,
+                                WeatherDTO::class.java
+                            )
+                        )
+                    }
+                } else {
+                    TODO(PROCESS_ERROR)
+                }
+            }
+
+            // Вызывается при сбое в процессе запроса на сервер
+            override fun onFailure(call: Call?, e: IOException?) {
+                TODO(PROCESS_ERROR)
+            }
+        })
+
+
     }
 
     private fun renderData(weatherDTO: WeatherDTO) {
+//        viewBinding.main.visibility = View.VISIBLE
+//        viewBinding.downloadingLayout.visibility = View.GONE
+//        val fact = weatherDTO.fact
+//        val temp = fact!!.temp
+//        val wind = fact.wind_speed
+//        val humidity = fact.humidity
+//        if (temp == TEMP_INVALID || wind == WIND_INVALID || humidity ==
+//            HUMIDITY_INVALID
+//        ) {
+//            Snackbar.make(
+//                viewBinding.root,
+//                "TEMP_INVALID, WIND_INVALID, HUMIDITY_INVALID ",
+//                Snackbar.LENGTH_LONG
+//            ).show()
+//        } else {
+//            val city = weatherBundle.city
+//            viewBinding.textviewCityResult.text = city.city
+//            viewBinding.textviewTemperatureResult.text = temp.toString()
+//            viewBinding.textviewWindResult.text = wind.toString()
+//            viewBinding.textviewWetnessResult.text = "${humidity}%"
+//            viewBinding.textviewCoordinates.text =
+//                "${getString(R.string.lat_lon)} ${city.lat}, ${city.lon}"
+//        }
+
+
         viewBinding.main.visibility = View.VISIBLE
         viewBinding.downloadingLayout.visibility = View.GONE
         val fact = weatherDTO.fact
-        val temp = fact!!.temp
-        val wind = fact.wind_speed
-        val humidity = fact.humidity
-        if (temp == TEMP_INVALID || wind == WIND_INVALID || humidity ==
-            HUMIDITY_INVALID
+        if (fact == null || fact.temp == null || fact.wind_speed == null || fact.humidity == null
         ) {
             Snackbar.make(
                 viewBinding.root,
                 "TEMP_INVALID, WIND_INVALID, HUMIDITY_INVALID ",
                 Snackbar.LENGTH_LONG
             ).show()
+            TODO(PROCESS_ERROR)
         } else {
             val city = weatherBundle.city
             viewBinding.textviewCityResult.text = city.city
-            viewBinding.textviewTemperatureResult.text = temp.toString()
-            viewBinding.textviewWindResult.text = wind.toString()
-            viewBinding.textviewWetnessResult.text = "${humidity}%"
+            viewBinding.textviewTemperatureResult.text = fact.temp.toString()
+            viewBinding.textviewWindResult.text = fact.wind_speed.toString()
+            viewBinding.textviewWetnessResult.text = "${fact.humidity}%"
             viewBinding.textviewCoordinates.text =
                 "${getString(R.string.lat_lon)} ${city.lat}, ${city.lon}"
         }
+
+
     }
 
 

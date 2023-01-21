@@ -51,10 +51,10 @@ class LoadWeatherService(name: String? = "LoadWeatherService") : IntentService(n
                 urlConnection.apply {
                     requestMethod = REQUEST_GET
                     readTimeout = REQUEST_TIMEOUT
-                    addRequestProperty(
-                        REQUEST_API_KEY,
-                        YOUR_API_KEY
-                    )
+//                    addRequestProperty(
+//                        REQUEST_API_KEY,
+////                        YOUR_API_KEY
+//                    )
                 }
                 val weatherDTO: WeatherDTO =
                     Gson().fromJson(
