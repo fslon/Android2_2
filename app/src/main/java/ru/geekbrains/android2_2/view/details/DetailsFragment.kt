@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.DetailsFragmentBinding
 import ru.geekbrains.android2_2.model.Weather
-import ru.geekbrains.android2_2.utils.showSnackBar
+import ru.geekbrains.android2_2.utils.showSnackBarINDEFINITE
 import ru.geekbrains.android2_2.viewModel.AppState
 import ru.geekbrains.android2_2.viewModel.DetailsViewModel
 
@@ -76,7 +76,7 @@ class DetailsFragment : Fragment() {
             is AppState.Error -> {
                 viewBinding.main.visibility = View.VISIBLE
                 viewBinding.downloadingLayout.visibility = View.GONE
-                viewBinding.main.showSnackBar(
+                viewBinding.main.showSnackBarINDEFINITE(
                     getString(R.string.error),
                     getString(R.string.reload),
                     {

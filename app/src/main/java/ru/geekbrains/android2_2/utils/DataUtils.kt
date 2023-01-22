@@ -11,7 +11,7 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): List<Weather> {
     return listOf(
         Weather(
             getDefaultCity(), fact.temp!!, fact.wind_speed!!,
-            fact.humidity!!
+            fact.humidity!!, fact.condition!!
         )
     )
 

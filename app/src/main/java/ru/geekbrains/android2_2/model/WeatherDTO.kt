@@ -7,5 +7,6 @@ data class WeatherDTO(
 data class FactDTO(
     val temp: Int?,
     val wind_speed: Double?,
-    val humidity: Int?
+    val humidity: Int?,
+    val condition: String?
 )
