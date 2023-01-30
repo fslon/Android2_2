@@ -1,5 +1,6 @@
 package ru.geekbrains.android2_2.view.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +16,20 @@ import ru.geekbrains.android2_2.view.details.DetailsFragment
 import ru.geekbrains.android2_2.viewModel.AppState
 import ru.geekbrains.android2_2.viewModel.MainViewModel
 
+private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
+
 class MainFragment : Fragment() {
+
+    private var isDataSetWorld: Boolean = false
+
+    val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+    val editor = sharedPref?.edit()
 
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
-    private var isDataSetRus: Boolean = true
+
+    //    private var isDataSetRus: Boolean = true
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
 
@@ -46,15 +55,52 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+//        Log.d("******************", isDataSetWorld.toString())
+//        Log.d("//////////////////", isDataSetWorld.toString())
         binding.mainFragmentRecyclerView.adapter = adapter
-        binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
+        binding.mainFragmentFAB.setOnClickListener {                                                 //TODO NOW
+//            editor?.putBoolean(IS_WORLD_KEY, !isDataSetWorld)
+            changeWeatherDataSet()
+        }
 //        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it as AppState) })
-        viewModel.getWeatherFromLocalSourceRus()
+//        viewModel.getWeatherFromLocalSourceRus()
 
-        binding.buttonReload.setOnClickListener { viewModel.getWeatherFromLocalSourceRus() }
+        binding.buttonReload.setOnClickListener { showListOfTowns() }
+
+        showListOfTowns()
+
     }
+
+    private fun showListOfTowns() {
+        activity?.let {
+            isDataSetWorld = it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY, false)
+            if (isDataSetWorld) {
+                viewModel.getWeatherFromLocalSourceWorld()
+                binding.mainFragmentFAB.setImageResource(R.drawable.world)
+            } else {
+                viewModel.getWeatherFromLocalSourceRus()
+                binding.mainFragmentFAB.setImageResource(R.drawable.russia)
+            }
+
+        }
+    }
+
+    private fun changeWeatherDataSet() {
+        isDataSetWorld = !isDataSetWorld
+        saveListOfTowns()
+        showListOfTowns()
+    }
+
+    private fun saveListOfTowns() {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, isDataSetWorld)
+                apply()
+            }
+        }
+    }
+
 
     private fun renderData(appState: AppState) {
         when (appState) {
@@ -71,22 +117,9 @@ class MainFragment : Fragment() {
                     getString(R.string.reload),
                     { viewModel.getWeatherFromLocalSourceRus() })
             }
-
-
         }
     }
 
-    private fun changeWeatherDataSet() {
-        if (isDataSetRus) {
-            viewModel.getWeatherFromLocalSourceWorld()
-            binding.mainFragmentFAB.setImageResource(R.drawable.world)
-        } else {
-            viewModel.getWeatherFromLocalSourceRus()
-            binding.mainFragmentFAB.setImageResource(R.drawable.russia)
-        }
-        isDataSetRus = !isDataSetRus
-
-    }
 
     override fun onDestroy() {
         _binding = null

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.details_fragment.*
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.DetailsFragmentBinding
 import ru.geekbrains.android2_2.model.Weather
@@ -98,11 +100,35 @@ class DetailsFragment : Fragment() {
         viewBinding.textviewCoordinates.text =
             "${getString(R.string.lat_lon)} ${city.lat}, ${city.lon}"
         viewBinding.textviewConditionResult.text = weather.condition
+
+        setWeatherIcon(weather.condition)
+
+    }
+
+    private fun setWeatherIcon(condition: String) {
+        var link = "https://cdn-icons-png.flaticon.com/512/2849/2849457.png"
+
+        when (condition) {
+            "clear" -> link = "https://img.icons8.com/bubbles/512/sun-star.png"
+            "overcast" -> link = "https://img.icons8.com/android/512/clouds.png"
+            "light-snow" -> link = "https://img.icons8.com/office/512/winter.png"
+            "cloudy" -> link = "https://img.icons8.com/office/512/partly-cloudy-day--v1.png     "
+        }
+        Picasso
+            .get()
+            .load(link)
+            .into(weather_icon)
     }
 
 
     override fun onDestroy() {
         _viewBinding = null
+
+//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+//        val editor = sharedPref?.edit()
+//        Log.d("******************", isDataSetWorld.toString())
+
+
         super.onDestroy()
     }
 
