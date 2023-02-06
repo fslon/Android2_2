@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.details_fragment.*
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.databinding.DetailsFragmentBinding
+import ru.geekbrains.android2_2.model.City
 import ru.geekbrains.android2_2.model.Weather
 import ru.geekbrains.android2_2.utils.showSnackBarINDEFINITE
 import ru.geekbrains.android2_2.viewModel.AppState
@@ -68,16 +69,16 @@ class DetailsFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 viewBinding.main.visibility = View.VISIBLE
-                viewBinding.downloadingLayout.visibility = View.GONE
+                viewBinding.includedLoadingLayout.loadingLayout.visibility = View.GONE
                 setWeather(appState.weatherData[0])
             }
             is AppState.Loading -> {
                 viewBinding.main.visibility = View.GONE
-                viewBinding.downloadingLayout.visibility = View.VISIBLE
+                viewBinding.includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
                 viewBinding.main.visibility = View.VISIBLE
-                viewBinding.downloadingLayout.visibility = View.GONE
+                viewBinding.includedLoadingLayout.loadingLayout.visibility = View.GONE
                 viewBinding.main.showSnackBarINDEFINITE(
                     getString(R.string.error),
                     getString(R.string.reload),
@@ -93,6 +94,7 @@ class DetailsFragment : Fragment() {
 
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
+        saveCity(city, weather)
         viewBinding.textviewCityResult.text = city.city
         viewBinding.textviewTemperatureResult.text = weather.temperature.toString()
         viewBinding.textviewWindResult.text = weather.wind.toString()
@@ -105,12 +107,28 @@ class DetailsFragment : Fragment() {
 
     }
 
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.wind,
+                weather.wetness,
+                weather.condition
+            )
+        )
+    }
+
+
     private fun setWeatherIcon(condition: String) {
         var link = "https://cdn-icons-png.flaticon.com/512/2849/2849457.png"
 
         when (condition) {
             "clear" -> link = "https://img.icons8.com/bubbles/512/sun-star.png"
-            "overcast" -> link = "https://img.icons8.com/android/512/clouds.png"
+            "overcast" -> link = "https://img.icons8.com/fluency/256/happy-cloud.png"
             "light-snow" -> link = "https://img.icons8.com/office/512/winter.png"
             "cloudy" -> link = "https://img.icons8.com/office/512/partly-cloudy-day--v1.png     "
         }
