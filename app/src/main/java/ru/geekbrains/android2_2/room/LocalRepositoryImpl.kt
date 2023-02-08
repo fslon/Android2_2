@@ -6,11 +6,19 @@ import ru.geekbrains.android2_2.model.Weather
 class LocalRepositoryImpl(private val localDataSource: HistoryDao) :
     LocalRepository {
     override fun getAllHistory(): List<Weather> {
-        return convertHistoryEntityToWeather(localDataSource.all())
+        var result: List<HistoryEntity> = arrayListOf()
+        val thread1 = Thread {
+            result = localDataSource.all()
+        }
+        thread1.start()
+        thread1.join()
+        return convertHistoryEntityToWeather(result)
     }
 
     override fun saveEntity(weather: Weather) {
-        localDataSource.insert(convertWeatherToEntity(weather))
+        Thread {
+            localDataSource.insert(convertWeatherToEntity(weather))
+        }.start()
     }
 
     fun convertHistoryEntityToWeather(entityList: List<HistoryEntity>):
