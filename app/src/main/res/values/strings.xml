@@ -13,5 +13,6 @@
     <string name="lat_lon">lt/ln: </string>
     <string name="condition">Состояние</string>
     <string name="menu_title_history">history</string>
+    <string name="content_provider">contacts</string>
 
 </resources>

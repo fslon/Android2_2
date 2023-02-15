@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import ru.geekbrains.android2_2.R
 import ru.geekbrains.android2_2.view.HistoryFragment.HistoryFragment
+import ru.geekbrains.android2_2.view.experiments.ContentProviderFragment
 import ru.geekbrains.android2_2.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() { // 41415
@@ -43,6 +44,17 @@ class MainActivity : AppCompatActivity() { // 41415
                 }
                 true
             }
+
+            R.id.menu_content_provider -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, ContentProviderFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
