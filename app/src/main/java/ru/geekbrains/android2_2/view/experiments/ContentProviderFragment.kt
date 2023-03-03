@@ -165,6 +165,7 @@ class ContentProviderFragment : Fragment() {
         binding.containerForContacts.addView(AppCompatTextView(context).apply {
             text = "$textToShow | $phoneNumber"
             textSize = resources.getDimension(R.dimen.main_container_text_size)
+            setTextColor(resources.getColor(R.color.black))
         })
     }
 
